@@ -1,6 +1,7 @@
 <script setup>
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
+import { join } from "@/services/accountService";
 
 const router = useRouter();
 
@@ -11,6 +12,14 @@ const state = reactive({
     loginPw: "",
   },
 });
+
+const submit = async () => {
+  const res = await join(state.form);
+  if (res.status === 200) {
+    alert("회원가입을 축하합니다.");
+    await router.push("/");
+  }
+};
 </script>
 
 <template>
