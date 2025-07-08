@@ -1,7 +1,20 @@
 <script setup>
+import { logout } from "@/services/accountService";
+import { useAccountStore } from "@/stores/account";
+
+const account = useAccountStore();
+// console.log(account.state.loggedIn);
+
 // 로그아웃
 const logoutAccount = async () => {
-  alert("준비 중!");
+  if (!confirm("로그아웃 하시겠습니까?")) {
+    return;
+  }
+  const res = await logout();
+  if (res === undefined || res !== 200) {
+    return;
+  }
+  account.setLoggedIn(false);
 };
 </script>
 
@@ -13,14 +26,14 @@ const logoutAccount = async () => {
           <strong>Gallery</strong>
         </router-link>
         <div class="menus d-flex gap-3">
-          <template v-if="true">
-            <router-link to="/login">로그인</router-link>
-            <router-link to="/join">회원가입</router-link>
-          </template>
-          <template v-else>
+          <template v-if="account.state.loggedIn">
             <a @click="logoutAccount()">로그아웃</a>
             <router-link to="orders">주문 내역</router-link>
             <router-link to="cart">장바구니</router-link>
+          </template>
+          <template v-else>
+            <router-link to="/login">로그인</router-link>
+            <router-link to="/join">회원가입</router-link>
           </template>
         </div>
       </div>
