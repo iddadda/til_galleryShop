@@ -1,6 +1,6 @@
 <script setup>
-import { getItems } from "@/services/cartService";
-import { onMounted, reactive } from "vue";
+import { getItems, removeItem, removeAll } from "@/services/cartService";
+import { onMounted, reactive, computed } from "vue";
 
 // 반응형 상태
 const state = reactive({
@@ -10,9 +10,10 @@ const state = reactive({
 // 장바구니 상품 조회
 const load = async () => {
   const res = await getItems();
-  if (res.status === 200) {
-    state.items = res.data;
+  if (res === undefined || res.status !== 200) {
+    return;
   }
+  state.items = res.data;
 };
 
 onMounted(() => {
@@ -20,25 +21,38 @@ onMounted(() => {
 });
 
 // 장바구니 상품 삭제
-const remove = async (itemId) => {
-  const res = await removeItem(itemId);
-
-  if (res.status === 200) {
-    window.alert("선택하신 장바구니의 상품을 삭제했습니다.");
-    await load();
+const remove = async (cartId) => {
+  if (confirm("삭제하시겠습니까?")) {
+    const res = await removeItem(cartId);
+    if (res === undefined || res.status !== 200) {
+      return;
+    }
   }
+  // 다시 리로딩 or 방금 삭제한 객체만 state.items에서 삭제한다
+  load();
 };
 
-// 커스텀 생성 훅
-(async function onCreated() {
-  await load();
-})();
+// 장바구니 전체 비우기
+const clear = async () => {
+  if (confirm("장바구니를 비우겠습니까?")) {
+    const res = await removeAll();
+    if (res === undefined || res.status !== 200) {
+      return;
+    }
+  }
+  state.items = [];
+};
 </script>
 
 <template>
   <div class="cart">
     <div class="container">
       <template v-if="state.items.length">
+        <div class="d-flex justify-content-end">
+          <button @click="clear" class="btn btn-danger mt-5">
+            장바구니 비우기
+          </button>
+        </div>
         <ul class="items">
           <li v-for="i in state.items" :key="i.id">
             <img :src="`pic/item/${i.imgPath}`" :alt="`상품 사진(${i.name})`" />
