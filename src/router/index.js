@@ -3,6 +3,7 @@ import Home from "../views/Home.vue";
 import Join from "@/views/Join.vue";
 import Login from "@/views/Login.vue";
 import Cart from "@/views/Cart.vue";
+import OrderForm from "@/views/OrderForm.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +25,10 @@ const router = createRouter({
     {
       path: "/cart",
       component: Cart,
+    },
+    {
+      path: "/order",
+      component: OrderForm,
     },
   ],
 });

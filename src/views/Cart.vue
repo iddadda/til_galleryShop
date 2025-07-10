@@ -42,6 +42,23 @@ const clear = async () => {
   }
   state.items = [];
 };
+
+// 장바구니 합계액
+const computedTotalPrice = computed(() => {
+  let result = 0;
+  state.items.forEach((i) => {
+    result += i.price - (i.price * i.discountPer) / 100;
+  });
+  return result;
+});
+
+const computedTotalItem = computed(() => {
+  let result = 0;
+  state.items.forEach((i) => {
+    result++;
+  });
+  return result;
+});
 </script>
 
 <template>
@@ -67,6 +84,16 @@ const clear = async () => {
             >
           </li>
         </ul>
+        <div class="total_order">
+          <div>
+            <b>수량: </b>
+            <span> {{ computedTotalItem }}개</span>
+          </div>
+          <div>
+            <b> 총 금액: </b>
+            <span> {{ computedTotalPrice.toLocaleString() }}원</span>
+          </div>
+        </div>
         <div class="act">
           <router-link to="/order" class="btn btn-dark">주문하기</router-link>
         </div>
@@ -78,6 +105,8 @@ const clear = async () => {
 
 <style lang="scss" scoped>
 .cart {
+  font-size: 20px;
+
   .items {
     list-style: none;
     margin: 0;
@@ -107,6 +136,12 @@ const clear = async () => {
     cursor: pointer;
     font-size: 30px;
     padding: 5px 15px;
+  }
+
+  .total_order {
+    display: flex;
+    flex-direction: column;
+    margin: 25px 0 20px 0;
   }
 }
 
