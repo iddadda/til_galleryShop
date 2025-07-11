@@ -1,6 +1,11 @@
 <script setup>
 import { getItems, removeItem, removeAll } from "@/services/cartService";
 import { onMounted, reactive, computed } from "vue";
+import { useAccountStore } from "@/stores/account";
+import { useRouter } from "vue-router";
+
+const account = useAccountStore();
+const router = useRouter();
 
 // 반응형 상태
 const state = reactive({
@@ -9,6 +14,10 @@ const state = reactive({
 
 // 장바구니 상품 조회
 const load = async () => {
+  if (account.state.loggedIn === false) {
+    alert("로그인하세요");
+    router.push("/");
+  }
   const res = await getItems();
   if (res === undefined || res.status !== 200) {
     return;
