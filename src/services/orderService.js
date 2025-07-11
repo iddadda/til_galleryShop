@@ -9,3 +9,7 @@ export const addOrder = (args) => {
 export const getOrders = () => {
   return axios.get(path).catch((e) => e.response);
 };
+
+export const getOrder = (orderId) => {
+  return axios.get(`${path}/${orderId}`).catch((e) => e.response);
+};
