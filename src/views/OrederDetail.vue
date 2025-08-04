@@ -102,6 +102,9 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
+table img {
+  width: 150px;
+}
 .order-detail {
   > .container {
     table {
